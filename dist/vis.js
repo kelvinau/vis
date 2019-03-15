@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.21.0
- * @date    2019-03-14
+ * @date    2019-03-15
  *
  * @license
  * Copyright (C) 2011-2017 Almende B.V, http://almende.com
@@ -17744,13 +17744,15 @@ ItemSet.prototype._create = function () {
   this.groupHammer.on('panend', this._onGroupDragEnd.bind(this));
   this.groupHammer.get('pan').set({ threshold: 5, direction: Hammer.DIRECTION_VERTICAL });
 
-  this.body.dom.centerContainer.addEventListener('mouseover', this._onMouseOver.bind(this));
-  this.body.dom.centerContainer.addEventListener('mouseout', this._onMouseOut.bind(this));
-  this.body.dom.centerContainer.addEventListener('mousemove', this._onMouseMove.bind(this));
-  // right-click on timeline 
-  this.body.dom.centerContainer.addEventListener('contextmenu', this._onDragEnd.bind(this));
-
-  this.body.dom.centerContainer.addEventListener('mousewheel', this._onMouseWheel.bind(this));
+  // bind mouse events to dom for item and dot
+  ['centerContainer', 'backgroundVertical'].forEach(function (elem) {
+    this.body.dom[elem].addEventListener('mouseover', this._onMouseOver.bind(this));
+    this.body.dom[elem].addEventListener('mouseout', this._onMouseOut.bind(this));
+    this.body.dom[elem].addeventlistener('mousemove', this._onMouseMove.bind(this));
+    this.body.dom[elem].addEventListener('mousewheel', this._onMouseWheel.bind(this));
+    // right-click on timeline
+    this.body.dom[elem].addEventListener('contextmenu', this._onDragEnd.bind(this));
+  }.bind(this));
 
   // attach to the DOM
   this.show();
@@ -18451,7 +18453,7 @@ ItemSet.prototype._onUpdate = function (ids) {
     var selected;
 
     if (item) {
-      // update item   	
+      // update item
       if (!constructor || !(item instanceof constructor)) {
         // item type has changed, delete the item and recreate it
         selected = item.selected; // preserve selection of this item
@@ -19251,7 +19253,7 @@ ItemSet.prototype._onGroupDrag = function (event) {
           else if (origOrder[curPos + orgOffset] == draggedId) {
               orgOffset = 1;
             }
-            // found a group (apart from dragged group) that has the wrong position -> switch with the 
+            // found a group (apart from dragged group) that has the wrong position -> switch with the
             // group at the position where other one should be, fix index arrays and continue
             else {
                 var slippedPosition = newOrder.indexOf(origOrder[curPos + orgOffset]);
@@ -19476,7 +19478,7 @@ ItemSet.prototype._onUpdateItem = function (item) {
 /**
  * Handle drop event of data on item
  * Only called when `objectData.target === 'item'.
- * @param {Event} event The event 
+ * @param {Event} event The event
  * @private
  */
 ItemSet.prototype._onDropObjectOnItem = function (event) {
