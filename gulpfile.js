@@ -21,13 +21,13 @@ var VIS_MIN_JS        = 'vis.min.js';
 var VIS_CSS           = 'vis.css';
 var VIS_MIN_CSS       = 'vis.min.css';
 var INDIVIDUAL_JS_BUNDLES = [
-  {entry: './index-timeline-graph2d.js', filename: 'vis-timeline-graph2d.min.js'},
-  {entry: './index-network.js', filename: 'vis-network.min.js'},
-  {entry: './index-graph3d.js', filename: 'vis-graph3d.min.js'}
+  {entry: './index-timeline-graph2d.js', filename: 'vis-timeline-graph2d.js'},
+  {entry: './index-network.js', filename: 'vis-network.js'},
+  {entry: './index-graph3d.js', filename: 'vis-graph3d.js'}
 ];
 var INDIVIDUAL_CSS_BUNDLES = [
-  {entry: ['./lib/shared/**/*.css', './lib/timeline/**/*.css'], filename: 'vis-timeline-graph2d.min.css'},
-  {entry: ['./lib/shared/**/*.css', './lib/network/**/*.css'], filename: 'vis-network.min.css'}
+  {entry: ['./lib/shared/**/*.css', './lib/timeline/**/*.css'], filename: 'vis-timeline-graph2d.css'},
+  {entry: ['./lib/shared/**/*.css', './lib/network/**/*.css'], filename: 'vis-network.css'}
 ];
 
 
@@ -153,7 +153,8 @@ gulp.task('bundle-js-individual', function (cb) {
         sourcePrefix: '  '
       },
       module: webpackModule,
-      plugins: [ bannerPlugin, new webpack.optimize.UglifyJsPlugin() ],
+      // plugins: [ bannerPlugin, new webpack.optimize.UglifyJsPlugin() ],
+      plugins: [ bannerPlugin ],
       cache: true
     };
 
@@ -182,7 +183,7 @@ gulp.task('bundle-css-individual', function (cb) {
   async.each(INDIVIDUAL_CSS_BUNDLES, function (item, callback) {
     return gulp.src(item.entry)
         .pipe(concat(item.filename))
-        .pipe(cleanCSS())
+        // .pipe(cleanCSS())
         .pipe(rename(item.filename))
         .pipe(gulp.dest(DIST))
         .on('end', callback);
